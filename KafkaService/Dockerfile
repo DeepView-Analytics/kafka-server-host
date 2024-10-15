@@ -9,6 +9,10 @@ COPY create-topics.sh /usr/bin/create-topics.sh
 RUN chmod +x /usr/bin/create-topics.sh
 RUN cat /etc/kafka/config/new-server.properties >> /etc/kafka/config/server.properties
 
+# Output the combined server.properties to verify its contents
+RUN cat /etc/kafka/config/server.properties
+
+
 # Switch back to the Kafka user
 USER cp-kafka
 
