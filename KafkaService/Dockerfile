@@ -10,7 +10,7 @@ RUN chmod +x /usr/bin/create-topics.sh
 RUN cat /usr/bin/new-server.properties >> /etc/kafka/server.properties
 
 # Output the combined server.properties to verify its contents
-RUN cat /etc/kafka/config/server.properties
+RUN cat /etc/kafka/server.properties
 
 
 # Switch back to the Kafka user
