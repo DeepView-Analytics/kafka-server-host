@@ -32,7 +32,7 @@ RUN echo "tickTime=2000" >> /opt/zookeeper/conf/zoo.cfg && \
     echo "syncLimit=2" >> /opt/zookeeper/conf/zoo.cfg
 
 # Fix permission issues
-RUN chown -R cp-kafka:confluent /opt/zookeeper
+RUN chown -R cp-kafka:confluent /opt/zookeeper /etc/kafka/
 
 # Configuration and verification
 RUN sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/0.0.0.0:9092/' /etc/kafka/server.properties
