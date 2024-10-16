@@ -35,13 +35,15 @@ RUN echo "tickTime=2000" >> /opt/zookeeper/conf/zoo.cfg && \
 RUN chown -R cp-kafka:confluent /opt/zookeeper
 
 # Configuration and verification
+RUN sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/0.0.0.0:9092/' /etc/kafka/server.properties
+RUN sed -i 's/#advertised.listeners=PLAINTEXT:\/\/your.host.name:9092/advertised.listeners=PLAINTEXT:\/\/localhost:9092/' /etc/kafka/server.properties
 RUN cat /etc/kafka/server.properties
 
-# Set the environment variable for Kafka to connect to ZooKeeper
+# Set the environment variables for Kafka to connect to ZooKeeper and for advertised listeners
 ENV KAFKA_ZOOKEEPER_CONNECT=localhost:2181
 
 # Switch back to the Kafka user
 USER cp-kafka
 
 # Start ZooKeeper and Kafka, then create topics
-CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & /etc/confluent/docker/run & /usr/bin/topics-creation-commands.sh"]
+CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & sleep 5 & /etc/confluent/docker/run & /usr/bin/topics-creation-commands.sh"]
