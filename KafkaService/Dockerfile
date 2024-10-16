@@ -9,11 +9,7 @@ COPY create-topics.sh /usr/bin/create-topics.sh
 
 # Install necessary packages and tools
 RUN chmod +x /usr/bin/create-topics.sh
-
-# Ensure the server.properties file exists before appending
-RUN touch /etc/kafka/config/server.properties && \
-    cat /etc/kafka/config/new-server.properties >> /etc/kafka/config/server.properties
-
+RUN cat /usr/bin/new-server.properties >>  /etc/kafka/server.properties
 
 # Install ZooKeeper
 RUN apt-get update && apt-get install -y zookeeper
