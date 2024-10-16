@@ -38,6 +38,8 @@ RUN chmod -R 777 /etc/kafka/ /var/lib/kafka/ /var/log/kafka/
 # Configuration and verification
 RUN sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/0.0.0.0:9092/' /etc/kafka/server.properties
 RUN sed -i 's/#advertised.listeners=PLAINTEXT:\/\/your.host.name:9092/advertised.listeners=PLAINTEXT:\/\/localhost:9092/' /etc/kafka/server.properties
+RUN sed -i 's/^broker.id=.*/broker.id=${HOSTNAME##*-}/' /etc/kafka/server.properties
+
 RUN cat /etc/kafka/server.properties
 
 # Set the environment variables for Kafka to connect to ZooKeeper and for advertised listeners
