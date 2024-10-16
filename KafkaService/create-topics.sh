@@ -3,11 +3,11 @@
 
 # Create topics and echo the results
 echo "Creating topic: person_detection_requests"
-/etc/kafka/bin/kafka-topics --create --topic person_detection_requests --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+/usr/bin/kafka-topics --create --topic person_detection_requests --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 echo "Creating topic: person_detected_responses"
-/etc/kafka/bin/kafka-topics --create --topic person_detected_responses --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+/usr/bin/kafka-topics --create --topic person_detected_responses --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 # List all topics to verify
 echo "Listing all topics:"
-/etc/kafka/bin/kafka-topics --list --bootstrap-server localhost:9092
+/usr/bin/kafka-topics --list --bootstrap-server localhost:9092
