@@ -3,22 +3,17 @@ FROM confluentinc/cp-kafka:latest
 # Switch to root to ensure we have the necessary permissions
 USER root
 
-# Copy configuration files
 COPY new-server.properties /usr/bin/new-server.properties
 COPY create-topics.sh /usr/bin/create-topics.sh
 
-# Install necessary packages and tools
 RUN chmod +x /usr/bin/create-topics.sh
-RUN cat /usr/bin/new-server.properties >>  /etc/kafka/server.properties
+RUN cat /usr/bin/new-server.properties >> /etc/kafka/server.properties
 
-# Install ZooKeeper
-RUN yum update -y && yum install -y zookeeper
-
-# Configuration and verification
+# Output the combined server.properties to verify its contents
 RUN cat /etc/kafka/config/server.properties
+
 
 # Switch back to the Kafka user
 USER cp-kafka
 
-# Start ZooKeeper and Kafka, then create topics
-CMD ["sh", "-c", "zookeeper-server-start /etc/kafka/zookeeper.properties & /etc/confluent/docker/run & /usr/bin/create-topics.sh"]
+CMD ["sh", "-c", "/etc/confluent/docker/run & /usr/bin/create-topics.sh"]
