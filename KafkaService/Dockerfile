@@ -3,6 +3,11 @@ FROM confluentinc/cp-kafka:latest
 # Switch to root to ensure we have the necessary permissions
 USER root
 
+# Create the directory if it doesn't exist and set permissions
+RUN mkdir -p /var/lib/kafka/data && \
+    chown -R cp-kafka:confluent /var/lib/kafka/data && \
+    chmod -R 777 /var/lib/kafka/data
+    
 # Copy configuration files
 COPY new-server.properties /etc/kafka/config/new-server.properties
 COPY topics-creation-commands.sh /usr/bin/topics-creation-commands.sh
