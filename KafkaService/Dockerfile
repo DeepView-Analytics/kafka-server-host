@@ -48,4 +48,4 @@ ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
 USER cp-kafka
 
 # Start ZooKeeper and Kafka, then create topics
-CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & sleep 5 & /etc/confluent/docker/run & /usr/bin/topics-creation-commands.sh"]
+CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & sleep 5 & /etc/confluent/docker/run & sleep 5 & /usr/bin/topics-creation-commands.sh"]
