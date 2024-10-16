@@ -37,6 +37,9 @@ RUN chown -R cp-kafka:confluent /opt/zookeeper
 # Configuration and verification
 RUN cat /etc/kafka/server.properties
 
+# Set the environment variable for Kafka to connect to ZooKeeper
+ENV KAFKA_ZOOKEEPER_CONNECT=localhost:2181
+
 # Switch back to the Kafka user
 USER cp-kafka
 
