@@ -21,7 +21,7 @@ RUN wget https://archive.apache.org/dist/zookeeper/zookeeper-3.6.2/apache-zookee
     tar -zxf apache-zookeeper-3.6.2-bin.tar.gz && \
     mv apache-zookeeper-3.6.2-bin /opt/zookeeper && \
     rm apache-zookeeper-3.6.2-bin.tar.gz && \
-    mkdir /opt/zookeeper/logs && \
+    mkdir -p /opt/zookeeper/data /opt/zookeeper/logs && \
     touch /opt/zookeeper/conf/zoo.cfg
 
 # Create a ZooKeeper config file
@@ -30,6 +30,9 @@ RUN echo "tickTime=2000" >> /opt/zookeeper/conf/zoo.cfg && \
     echo "clientPort=2181" >> /opt/zookeeper/conf/zoo.cfg && \
     echo "initLimit=5" >> /opt/zookeeper/conf/zoo.cfg && \
     echo "syncLimit=2" >> /opt/zookeeper/conf/zoo.cfg
+
+# Fix permission issues
+RUN chown -R cp-kafka:confluent /opt/zookeeper
 
 # Configuration and verification
 RUN cat /etc/kafka/server.properties
