@@ -12,7 +12,7 @@ RUN chmod +x /usr/bin/create-topics.sh
 RUN cat /usr/bin/new-server.properties >>  /etc/kafka/server.properties
 
 # Install ZooKeeper
-RUN apt-get update && apt-get install -y zookeeper
+RUN yum update -y && yum install -y zookeeper
 
 # Configuration and verification
 RUN cat /etc/kafka/config/server.properties
