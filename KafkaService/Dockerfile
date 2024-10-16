@@ -39,15 +39,17 @@ RUN chmod -R 777 /etc/kafka/ /var/lib/kafka/ /var/log/kafka/
 RUN sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/0.0.0.0:9092/' /etc/kafka/server.properties
 RUN sed -i 's/#advertised.listeners=PLAINTEXT:\/\/your.host.name:9092/advertised.listeners=PLAINTEXT:\/\/localhost:9092/' /etc/kafka/server.properties
 RUN sed -i 's/^broker.id=.*/broker.id=${HOSTNAME##*-}/' /etc/kafka/server.properties
-
 RUN cat /etc/kafka/server.properties
 
 # Set the environment variables for Kafka to connect to ZooKeeper and for advertised listeners
 ENV KAFKA_ZOOKEEPER_CONNECT=localhost:2181
 ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
 
+# Ensure clean state for ZooKeeper data
+RUN rm -rf /opt/zookeeper/data/* /var/lib/kafka/*
+
 # Switch back to the Kafka user
 USER cp-kafka
 
 # Start ZooKeeper and Kafka, then create topics
-CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & sleep 5 & /etc/confluent/docker/run & sleep 5 & /usr/bin/topics-creation-commands.sh"]
+CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & sleep 5 & /etc/confluent/docker/run & /usr/bin/topics-creation-commands.sh"]
