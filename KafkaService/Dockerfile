@@ -41,6 +41,7 @@ RUN cat /etc/kafka/server.properties
 
 # Set the environment variables for Kafka to connect to ZooKeeper and for advertised listeners
 ENV KAFKA_ZOOKEEPER_CONNECT=localhost:2181
+ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
 
 # Switch back to the Kafka user
 USER cp-kafka
