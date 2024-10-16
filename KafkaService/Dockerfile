@@ -13,14 +13,10 @@ RUN chmod +x /usr/bin/topics-creation-commands.sh
 # Append to the existing server.properties
 RUN cat /etc/kafka/config/new-server.properties >> /etc/kafka/server.properties
 
-# Install snapd and enable the snapd socket
-RUN yum install -y epel-release && \
-    yum install -y snapd && \
+# Install snapd directly without epel-release
+RUN yum install -y snapd && \
     systemctl enable --now snapd.socket && \
     ln -s /var/lib/snapd/snap /snap
-
-# Restart the system to ensure snap’s paths are updated correctly
-RUN systemctl restart snapd
 
 # Install ZooKeeper using snap
 RUN snap install zookeeper
