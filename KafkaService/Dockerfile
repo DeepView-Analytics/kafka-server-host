@@ -13,13 +13,12 @@ RUN chmod +x /usr/bin/topics-creation-commands.sh
 # Append to the existing server.properties
 RUN cat /etc/kafka/config/new-server.properties >> /etc/kafka/server.properties
 
-# Install snapd directly without epel-release
-RUN yum install -y snapd && \
-    systemctl enable --now snapd.socket && \
-    ln -s /var/lib/snapd/snap /snap
-
-# Install ZooKeeper using snap
-RUN snap install zookeeper
+# Install ZooKeeper directly using yum
+RUN yum install -y wget && \
+    wget https://archive.apache.org/dist/zookeeper/zookeeper-3.6.2/apache-zookeeper-3.6.2-bin.tar.gz && \
+    tar -zxf apache-zookeeper-3.6.2-bin.tar.gz && \
+    mv apache-zookeeper-3.6.2-bin /opt/zookeeper && \
+    rm apache-zookeeper-3.6.2-bin.tar.gz
 
 # Configuration and verification
 RUN cat /etc/kafka/server.properties
@@ -28,4 +27,4 @@ RUN cat /etc/kafka/server.properties
 USER cp-kafka
 
 # Start ZooKeeper and Kafka, then create topics
-CMD ["sh", "-c", "/snap/bin/zookeeper.start & /etc/confluent/docker/run & /usr/bin/topics-creation-commands.sh"]
+CMD ["sh", "-c", "/opt/zookeeper/bin/zkServer.sh start & /etc/confluent/docker/run & /usr/bin/topics-creation-commands.sh"]
