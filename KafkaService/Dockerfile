@@ -9,14 +9,14 @@ RUN mkdir -p /var/lib/kafka/data && \
     chmod -R 777 /var/lib/kafka/data
     
 # Copy configuration files
-COPY new-server.properties /etc/kafka/config/new-server.properties
+COPY server.properties /etc/kafka/config/server.properties
 COPY topics-creation-commands.sh /usr/bin/topics-creation-commands.sh
 
 # Install necessary packages and tools
 RUN chmod +x /usr/bin/topics-creation-commands.sh
 
 # Append to the existing server.properties
-RUN cat /etc/kafka/config/new-server.properties >> /etc/kafka/server.properties
+RUN cat /etc/kafka/config/server.properties >> /etc/kafka/server.properties
 
 # Install wget
 RUN yum install -y wget
