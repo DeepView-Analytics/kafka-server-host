@@ -1,0 +1,14 @@
+# enable the large size messaging 
+---------------------------------
+# get the kafka_container_id that is runing on 9092 ( it looks like 2e0bae5bc)
+docker ps
+# replace <kafka_container_id>  with the id found previously
+docker exec -it <kafka_container_id> /bin/bash
+# past those commands
+echo "replica.fetch.max.bytes=15728640" >> /etc/kafka/server.properties
+echo "message.max.bytes=15728640" >> /etc/kafka/server.properties
+echo "max.request.size=15728640" >> /etc/kafka/server.properties
+
+# creating topics 
+-----------------------------------
+# topics will be created auto while producing from kafka-python
