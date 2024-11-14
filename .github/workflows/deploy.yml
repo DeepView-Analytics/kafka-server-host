@@ -1,4 +1,4 @@
-name: deploy to kubernetes <redis> , <kafka> , <zookeeper> 
+name: deploy to kubernetes (redis, kafka, zookeeper)
 
 on:
   push:
@@ -10,7 +10,6 @@ permissions:
   contents: read
 
 jobs:
-  
   deploy-to-kubernetes:
     runs-on: ubuntu-latest
     needs: build-and-push
@@ -25,32 +24,31 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kubectl
 
-      - name: Debug - Show secrets (only for debugging purposes, avoid exposing tokens in logs)
-        env:
-          KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
-          KUBE_TOKEN: ${{ env.KUBE_TOKEN }}
-        run: |
-          echo "KUBE_SERVER: $KUBE_SERVER"
-          echo "KUBE_TOKEN: $KUBE_TOKEN"
 
       - name: Test Kubernetes Connection
         env:
           KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
-          KUBE_TOKEN: ${{ env.KUBE_TOKEN }}
+          KUBE_TOKEN: ${{ env.KUBE_TOKEN }}  
         run: |
           echo "Testing Kubernetes connection..."
           kubectl get nodes --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify
-          
-      - name: Apply Kubernetes Configuration
+
+      - name: Apply Kubernetes Configuration for Zookeeper, Kafka, and Redis
         env:
           KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
           KUBE_TOKEN: ${{ env.KUBE_TOKEN }}
         run: |
-          echo "Applying Kubernetes configuration..."
+          echo "Applying Kubernetes configuration for Zookeeper, Kafka, and Redis..."
+          
+          # Zookeeper
           kubectl apply -f ./kubernetes/zookeeper_deployment.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
           kubectl apply -f ./kubernetes/zookeeper_service.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
+
+          # Kafka
           kubectl apply -f ./kubernetes/kafka-statefulset.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
           kubectl apply -f ./kubernetes/kafka_service.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
           kubectl apply -f ./kubernetes/kafka-zookeeper-communication.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
+
+          # Redis
           kubectl apply -f ./kubernetes/redis-deployment.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
           kubectl apply -f ./kubernetes/redis-service.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
