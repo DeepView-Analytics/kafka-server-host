@@ -26,7 +26,7 @@ jobs:
 
       - name: Test Kubernetes Connection
         env:
-          KUBE_SERVER: ${{ env.KUBE_SERVER }}
+          KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}  
         run: |
           echo "Testing Kubernetes connection..."
@@ -34,7 +34,7 @@ jobs:
 
       - name: Apply Kubernetes Configuration for Zookeeper, Kafka, and Redis
         env:
-          KUBE_SERVER: ${{ env.KUBE_SERVER }}
+          KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
         run: |
           echo "Applying Kubernetes configuration for Zookeeper, Kafka, and Redis..."
