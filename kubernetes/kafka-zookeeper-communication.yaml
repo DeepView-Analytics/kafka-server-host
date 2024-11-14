@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kafka-zookeeper-communication
+  namespace: deepview  # Ensure this matches your namespace
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: kafka  # Allow traffic from Kafka to Zookeeper
+      ports:
+        - protocol: TCP
+          port: 2181  # Default Zookeeper port (can be updated if different)
+    - from:
+        - podSelector:
+            matchLabels:
+              app: zookeeper  # Allow traffic from Zookeeper to Kafka
+      ports:
+        - protocol: TCP
+          port: 9092  # Kafka broker port (update if different)
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: zookeeper  # Allow Kafka to connect to Zookeeper
+      ports:
+        - protocol: TCP
+          port: 2181  # Default Zookeeper port
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kafka  # Allow Zookeeper to connect to Kafka
+      ports:
+        - protocol: TCP
+          port: 9092  # Kafka broker port

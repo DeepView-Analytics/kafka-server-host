@@ -1,0 +1,52 @@
+# kafka-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: deepview
+spec:
+  serviceName: "kafka"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:7.3.2
+        ports:
+        - name: external
+          containerPort: 9092
+        - name: internal
+          containerPort: 19092
+        env:
+        - name: KAFKA_BROKER_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: "zookeeper:2181"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: |
+            INTERNAL://kafka-$(KAFKA_BROKER_ID).kafka:$(expr 19092 + $(KAFKA_BROKER_ID)),
+            EXTERNAL://kafka-$(KAFKA_BROKER_ID).kafka:$(expr 9092 + $(KAFKA_BROKER_ID))
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: "INTERNAL"
+        - name: KAFKA_LOG4J_LOGGERS
+          value: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+        - name: KAFKA_AUTHORIZER_CLASS_NAME
+          value: "kafka.security.authorizer.AclAuthorizer"
+        - name: KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND
+          value: "true"
+        - name: KAFKA_MESSAGE_MAX_BYTES
+          value: "15728640"
+        - name: KAFKA_REPLICA_FETCH_MAX_BYTES
+          value: "15728640"
+        - name: KAFKA_MAX_REQUEST_SIZE
+          value: "15728640"
