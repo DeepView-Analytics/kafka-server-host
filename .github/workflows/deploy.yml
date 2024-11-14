@@ -44,7 +44,7 @@ jobs:
       - name: Apply Kubernetes Configuration
         env:
           KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
-          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          KUBE_TOKEN: ${{ env.KUBE_TOKEN }}
         run: |
           echo "Applying Kubernetes configuration..."
           kubectl apply -f ./kubernetes/zookeeper_deployment.yaml --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify --validate=false
