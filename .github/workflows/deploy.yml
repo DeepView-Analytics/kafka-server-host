@@ -26,16 +26,16 @@ jobs:
 
       - name: Test Kubernetes Connection
         env:
-          KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
-          KUBE_TOKEN: ${{ env.KUBE_TOKEN }}  
+          KUBE_SERVER: ${{ env.KUBE_SERVER }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}  
         run: |
           echo "Testing Kubernetes connection..."
           kubectl get nodes --server=$KUBE_SERVER --token=$KUBE_TOKEN --insecure-skip-tls-verify
 
       - name: Apply Kubernetes Configuration for Zookeeper, Kafka, and Redis
         env:
-          KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
-          KUBE_TOKEN: ${{ env.KUBE_TOKEN }}
+          KUBE_SERVER: ${{ env.KUBE_SERVER }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
         run: |
           echo "Applying Kubernetes configuration for Zookeeper, Kafka, and Redis..."
           
